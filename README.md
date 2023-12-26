@@ -11,13 +11,13 @@
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   [Simple, fast routing engine](https://laravel.com/docs/routing).
+-   [Powerful dependency injection container](https://laravel.com/docs/container).
+-   Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+-   Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+-   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+-   [Robust background job processing](https://laravel.com/docs/queues).
+-   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
@@ -35,19 +35,19 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 
 ### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+-   **[Vehikl](https://vehikl.com/)**
+-   **[Tighten Co.](https://tighten.co)**
+-   **[WebReinvent](https://webreinvent.com/)**
+-   **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+-   **[64 Robots](https://64robots.com)**
+-   **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
+-   **[Cyber-Duck](https://cyber-duck.co.uk)**
+-   **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+-   **[Jump24](https://jump24.co.uk)**
+-   **[Redberry](https://redberry.international/laravel/)**
+-   **[Active Logic](https://activelogic.com)**
+-   **[byte5](https://byte5.de)**
+-   **[OP.GG](https://op.gg)**
 
 ## Contributing
 
@@ -64,3 +64,78 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Setup guide
+
+Copy .env.example to .env
+
+`cp .env.example .env`
+
+**Change database settings in .env file.**
+
+Run the below command in the terminal at project path:
+
+`composer install`
+
+`npm install`
+
+**Install Passport with Composer, run the following command:**
+
+`composer require laravel/passport`
+
+Passport will need to store OAuth2 clients and access tokens in some database tables, so it creates migrations for the tables during installation. Migrate your database to create the tables:
+
+`php artisan migrate`
+
+To generate secure access tokens for your application, Passport requires some encryption keys and two clients known as Laravel Personal Access Client and Laravel Password Grant Client. To create these keys and encryption clients, run the following command:
+
+`php artisan passport:install`
+
+The HasApiTokens trait will provide you with some helper methods to carry this out. To add it to your User model, navigate to `App\Models\User`, add its namespace at the top, and specify for it to be used inside the User class:
+
+```
+<?php
+
+  namespace App\Models;
+
+  use Laravel\Passport\HasApiTokens;  //add the namespace
+
+  class User extends Authenticatable
+  {
+    use HasApiTokens, HasFactory, Notifiable;   //use it here
+  }
+
+```
+
+To set Passport’s TokenGuard to authenticate incoming API requests up, navigate to your `config/auth.php` file, go to your api authentication guard, and set the value of the driver option to passport:
+
+```
+'guards' => [
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
+    ],
+
+    'api' => [
+        'driver' => 'passport', //update this line
+        'provider' => 'users',
+    ],
+],
+
+```
+
+In Development mode
+
+`npm run dev`
+
+In Production mode
+
+`npm run build`
+
+To run the project
+
+`php artisan serve or php artisan serve --host ip-address --port 8000`
+
+To run the test cases
+
+`php artisan test` to run all test cases
